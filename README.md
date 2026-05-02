@@ -1,16 +1,78 @@
-# React + Vite
+# 🐾 Petlove - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Redux Toolkit + Vite ile geliştirilmiş evcil hayvan platformu.
 
-Currently, two official plugins are available:
+## Kurulum
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+## Teknolojiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 18** — UI framework
+- **Redux Toolkit** — State management
+- **React Router v6** — Routing
+- **Axios** — HTTP istekleri
+- **React Hook Form + Yup** — Form doğrulama
+- **React Select** — Gelişmiş dropdown
+- **React Toastify** — Bildirimler
+- **Vite** — Build tool
 
-## Expanding the ESLint configuration
+## Proje Yapısı
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+src/
+├── api/          # Axios instance
+├── components/
+│   ├── Header/   # Header + burger menü
+│   ├── Modals/   # Tüm modal bileşenler
+│   └── common/   # Title, SearchField, Pagination, Loader, PetBlock, PrivateRoute, PublicRoute
+├── pages/
+│   ├── Home/
+│   ├── News/
+│   ├── Notices/
+│   ├── Friends/
+│   ├── Register/
+│   ├── Login/
+│   ├── Profile/
+│   ├── AddPet/
+│   └── NotFound/
+└── redux/
+    ├── slices/authSlice.js
+    └── store.js
+```
+
+## Sayfalar
+
+| Sayfa | Yol | Erişim |
+|-------|-----|--------|
+| Home | `/home` | Herkese açık |
+| News | `/news` | Herkese açık |
+| Notices | `/notices` | Herkese açık |
+| Our Friends | `/friends` | Herkese açık |
+| Register | `/register` | Yalnızca yetkisiz |
+| Login | `/login` | Yalnızca yetkisiz |
+| Profile | `/profile` | Yalnızca yetkili |
+| Add Pet | `/add-pet` | Yalnızca yetkili |
+
+## Backend API
+
+`https://petlove.b.goit.study/api-docs/`
+
+## Özellikler
+
+- ✅ Responsive tasarım (320px → 768px → 1280px)
+- ✅ JWT token ile kimlik doğrulama
+- ✅ LocalStorage'de token saklama
+- ✅ React Hook Form + Yup doğrulama
+- ✅ Server-side pagination
+- ✅ Haber arama
+- ✅ İlan filtreleme (kategori, cinsiyet, tür, sıralama)
+- ✅ Favori ilanlar
+- ✅ Evcil hayvan ekleme/silme
+- ✅ Profil düzenleme
+- ✅ Responsive burger menü
+- ✅ Toast bildirimleri
+- ✅ Modal bileşenler (Escape / backdrop ile kapatma)

@@ -1,0 +1,45 @@
+.form { width: 100%; max-width: 480px; }
+
+.wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 80px 14px 20px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 40px;
+  font-size: 14px;
+  font-family: var(--font);
+  background: var(--color-white);
+  outline: none;
+  transition: 0.2s;
+}
+
+.input:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(246,184,61,0.15);
+}
+
+.clearBtn, .searchBtn {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  color: var(--color-text-secondary);
+  transition: 0.2s;
+}
+
+.clearBtn {
+  right: 44px;
+  font-size: 12px;
+}
+
+.clearBtn:hover, .searchBtn:hover { color: var(--color-brand); }

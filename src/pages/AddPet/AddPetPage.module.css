@@ -1,0 +1,2 @@
+.sexRow { display: flex; gap: 24px; }
+.sexLabel { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
