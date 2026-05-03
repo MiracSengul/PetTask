@@ -12,50 +12,82 @@ export default function ModalNotice({ notice, onClose, onFavoriteToggle }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handler);
+      document.body.style.overflow = '';
+    };
   }, [onClose]);
+
+  if (!notice) return null;
 
   const handleFav = async () => {
     setLoading(true);
+    const previousFav = isFav;
     try {
       if (isFav) {
-        await api.delete(`/notices/favorites/${notice._id}`);
+        await api.delete(`/notices/favorites/remove/${notice._id}`);
+        toast.success('Favorilerden çıkarıldı');
       } else {
-        await api.post(`/notices/favorites/${notice._id}`);
+        await api.post(`/notices/favorites/add/${notice._id}`);
+        toast.success('Favorilere eklendi ❤️');
       }
-      setIsFav(!isFav);
-      onFavoriteToggle && onFavoriteToggle(notice._id, !isFav);
-    } catch (e) {
-      toast.error(e.response?.data?.message || 'Hata oluştu');
+      const newVal = !isFav;
+      setIsFav(newVal);
+      onFavoriteToggle?.(notice._id, newVal);
+    } catch (err) {
+      setIsFav(previousFav); // hata olursa eski duruma dön
+      toast.error(err.response?.data?.message || 'İşlem başarısız');
     }
     setLoading(false);
   };
 
-  if (!notice) return null;
-
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className={`modal ${styles.modal}`} onClick={(e) => e.stopPropagation()}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
-        {notice.imgURL && <img src={notice.imgURL} alt={notice.title} className={styles.img} />}
+
+        {notice.imgURL && (
+          <div className={styles.imgWrap}>
+            <img src={notice.imgURL} alt={notice.title} className={styles.img} />
+          </div>
+        )}
+
         <div className={styles.body}>
+          <div className={styles.ratingRow}>
+            <span className={styles.rating}>⭐ {notice.popularity || 0}</span>
+          </div>
           <h2 className={styles.title}>{notice.title}</h2>
-          <div className={styles.info}>
-            <div className={styles.row}><span>Ad:</span><span>{notice.name}</span></div>
-            <div className={styles.row}><span>Doğum Tarihi:</span><span>{notice.birthday}</span></div>
-            <div className={styles.row}><span>Cinsiyet:</span><span>{notice.sex}</span></div>
-            <div className={styles.row}><span>Tür:</span><span>{notice.species}</span></div>
-            <div className={styles.row}><span>Kategori:</span><span>{notice.category}</span></div>
-            <div className={styles.row}><span>Popülerlik:</span><span>❤️ {notice.popularity || 0}</span></div>
+          <div className={styles.infoGrid}>
+            {[
+              ['Name',     notice.name],
+              ['Birthday', notice.birthday],
+              ['Sex',      notice.sex],
+              ['Species',  notice.species],
+              ['Category', notice.category],
+              ['Price',    notice.price ? `$${notice.price}` : null],
+            ].filter(([, v]) => v).map(([label, value]) => (
+              <div key={label} className={styles.infoRow}>
+                <span className={styles.infoLabel}>{label}</span>
+                <span className={styles.infoValue}>{value}</span>
+              </div>
+            ))}
           </div>
           {notice.comment && <p className={styles.comment}>{notice.comment}</p>}
+
           {isLoggedIn && (
             <div className={styles.actions}>
-              <button className={`btn ${isFav ? 'btn-danger' : 'btn-outline'}`} onClick={handleFav} disabled={loading}>
-                {isFav ? '💔 Remove from favorites' : '❤️ Add to favorites'}
+              <button
+                className={`${styles.actionBtn} ${isFav ? styles.actionBtnActive : ''}`}
+                onClick={handleFav}
+                disabled={loading}
+              >
+                {isFav ? '❤️ Remove from' : '🤍 Add to'}
               </button>
-              {notice.owner?.phone && (
-                <a href={`tel:${notice.owner.phone}`} className="btn btn-primary">Contact</a>
+              {notice.user?.phone && (
+                <a href={`tel:${notice.user.phone}`} className={styles.contactBtn}>
+                  Contact
+                </a>
               )}
             </div>
           )}

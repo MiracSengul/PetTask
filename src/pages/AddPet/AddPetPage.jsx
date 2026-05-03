@@ -22,7 +22,7 @@ export default function AddPetPage() {
 
   const onSubmit = async (data) => {
     try {
-      await api.post('/users/current/pets', data);
+      await api.post('/users/current/pets/add', data);
       toast.success('Evcil hayvan eklendi! 🐾');
       navigate('/profile');
     } catch (e) {

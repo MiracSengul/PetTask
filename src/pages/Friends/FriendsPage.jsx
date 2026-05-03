@@ -9,7 +9,7 @@ export default function FriendsPage() {
 
   useEffect(() => {
     setLoading(true);
-    api.get('/friends').then((r) => {
+    api.get('/friends/').then((r) => {
       setFriends(r.data.results || r.data || []);
     }).catch(console.error).finally(() => setLoading(false));
   }, []);

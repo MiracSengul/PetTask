@@ -22,8 +22,8 @@ export default function Header() {
 
   const navLinks = [
     { to: '/news', label: 'News' },
-    { to: '/notices', label: 'Notices' },
-    { to: '/friends', label: 'Our Friends' },
+    { to: '/notices', label: 'Find pet' },
+    { to: '/friends', label: 'Our friends' },
   ];
 
   return (
@@ -31,11 +31,9 @@ export default function Header() {
       <header className={styles.header}>
         <div className={`container ${styles.inner}`}>
           <Link to="/home" className={styles.logo}>
-            <span className={styles.logoIcon}>🐾</span>
-            <span>petlove</span>
+            petl<span style={{ color: '#fff' }}>♥</span>ve
           </Link>
 
-          {/* Desktop Nav */}
           <nav className={styles.nav}>
             {navLinks.map((l) => (
               <NavLink
@@ -46,35 +44,32 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Desktop Auth */}
           <div className={styles.authArea}>
             {!isLoggedIn ? (
               <>
-                <Link to="/register" className={`btn btn-outline ${styles.authBtn}`}>Register</Link>
-                <Link to="/login" className={`btn btn-primary ${styles.authBtn}`}>Log In</Link>
+                <Link to="/login" className={styles.authBtnLogin}>LOGIN</Link>
+                <Link to="/register" className={styles.authBtnRegister}>REGISTRATION</Link>
               </>
             ) : (
               <>
+                <button className={styles.authBtnLogout} onClick={() => setShowLogout(true)}>LOGOUT</button>
                 <Link to="/profile" className={styles.userBar}>
                   {user?.avatar
                     ? <img src={user.avatar} alt="avatar" className={styles.avatar} />
                     : <div className={styles.avatarDefault}>👤</div>
                   }
-                  <span>{user?.name || 'Profil'}</span>
+                  <span>{user?.name || 'Profile'}</span>
                 </Link>
-                <button className={`btn btn-ghost ${styles.authBtn}`} onClick={() => setShowLogout(true)}>Log Out</button>
               </>
             )}
           </div>
 
-          {/* Burger */}
           <button className={styles.burger} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menü">
             <span /><span /><span />
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
       {menuOpen && (
         <div className={styles.mobileMenu}>
           <button className={styles.mobileClose} onClick={() => setMenuOpen(false)}>✕</button>
@@ -91,19 +86,19 @@ export default function Header() {
           <div className={styles.mobileAuth}>
             {!isLoggedIn ? (
               <>
-                <Link to="/register" className="btn btn-outline" onClick={() => setMenuOpen(false)}>Register</Link>
-                <Link to="/login" className="btn btn-primary" onClick={() => setMenuOpen(false)}>Log In</Link>
+                <Link to="/login" className={styles.authBtnLogin} onClick={() => setMenuOpen(false)}>LOGIN</Link>
+                <Link to="/register" className={styles.authBtnRegister} onClick={() => setMenuOpen(false)}>REGISTRATION</Link>
               </>
             ) : (
               <>
+                <button className={styles.authBtnLogout} onClick={() => { setShowLogout(true); setMenuOpen(false); }}>LOGOUT</button>
                 <Link to="/profile" className={styles.userBar} onClick={() => setMenuOpen(false)}>
                   {user?.avatar
                     ? <img src={user.avatar} alt="avatar" className={styles.avatar} />
                     : <div className={styles.avatarDefault}>👤</div>
                   }
-                  <span>{user?.name || 'Profil'}</span>
+                  <span>{user?.name}</span>
                 </Link>
-                <button className="btn btn-ghost" onClick={() => { setShowLogout(true); setMenuOpen(false); }}>Log Out</button>
               </>
             )}
           </div>
@@ -114,7 +109,7 @@ export default function Header() {
         <ModalApproveAction
           onClose={() => setShowLogout(false)}
           onConfirm={handleLogout}
-          question="Çıkış yapmak istediğinizden emin misiniz?"
+          question="Hesabınızdan çıkış yapmak istediğinizden emin misiniz?"
         />
       )}
     </>

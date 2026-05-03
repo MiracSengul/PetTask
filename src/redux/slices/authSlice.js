@@ -25,30 +25,36 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
   try {
     await api.post('/users/signout');
   } catch (e) {
-    // still log out client side
+    // hata olsa da istemcide çıkış yapılır
   }
 });
 
-export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async (_, { rejectWithValue, getState }) => {
-  const token = getState().auth.token || localStorage.getItem(TOKEN_KEY);
-  if (!token) return rejectWithValue('No token');
-  setAuthToken(token);
-  try {
-    const res = await api.get('/users/current');
-    return res.data;
-  } catch (e) {
-    return rejectWithValue(e.response?.data?.message || 'Kullanıcı alınamadı');
+export const fetchCurrentUser = createAsyncThunk(
+  'auth/fetchCurrentUser',
+  async (_, { rejectWithValue, getState }) => {
+    const token = getState().auth.token || localStorage.getItem(TOKEN_KEY);
+    if (!token) return rejectWithValue('No token');
+    setAuthToken(token);
+    try {
+      const res = await api.get('/users/current');
+      return res.data;
+    } catch (e) {
+      return rejectWithValue(e.response?.data?.message || 'Kullanıcı alınamadı');
+    }
   }
-});
+);
 
-export const updateUser = createAsyncThunk('auth/updateUser', async (data, { rejectWithValue }) => {
-  try {
-    const res = await api.patch('/users/current', data);
-    return res.data;
-  } catch (e) {
-    return rejectWithValue(e.response?.data?.message || 'Güncelleme başarısız');
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.patch('/users/current/edit', data);  // ✅ DÜZELTİLDİ
+      return res.data;
+    } catch (e) {
+      return rejectWithValue(e.response?.data?.message || 'Güncelleme başarısız');
+    }
   }
-});
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -60,7 +66,9 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    clearError(state) { state.error = null; },
+    clearError(state) {
+      state.error = null;
+    },
     clientLogout(state) {
       state.user = null;
       state.token = null;
@@ -71,7 +79,10 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(register.pending, (s) => { s.isLoading = true; s.error = null; })
+      .addCase(register.pending, (s) => {
+        s.isLoading = true;
+        s.error = null;
+      })
       .addCase(register.fulfilled, (s, a) => {
         s.isLoading = false;
         s.user = a.payload.user || a.payload;
@@ -80,9 +91,15 @@ const authSlice = createSlice({
         localStorage.setItem(TOKEN_KEY, a.payload.token);
         setAuthToken(a.payload.token);
       })
-      .addCase(register.rejected, (s, a) => { s.isLoading = false; s.error = a.payload; })
+      .addCase(register.rejected, (s, a) => {
+        s.isLoading = false;
+        s.error = a.payload;
+      })
 
-      .addCase(login.pending, (s) => { s.isLoading = true; s.error = null; })
+      .addCase(login.pending, (s) => {
+        s.isLoading = true;
+        s.error = null;
+      })
       .addCase(login.fulfilled, (s, a) => {
         s.isLoading = false;
         s.user = a.payload.user || a.payload;
@@ -91,24 +108,33 @@ const authSlice = createSlice({
         localStorage.setItem(TOKEN_KEY, a.payload.token);
         setAuthToken(a.payload.token);
       })
-      .addCase(login.rejected, (s, a) => { s.isLoading = false; s.error = a.payload; })
+      .addCase(login.rejected, (s, a) => {
+        s.isLoading = false;
+        s.error = a.payload;
+      })
 
       .addCase(logout.fulfilled, (s) => {
-        s.user = null; s.token = null; s.isLoggedIn = false;
+        s.user = null;
+        s.token = null;
+        s.isLoggedIn = false;
         localStorage.removeItem(TOKEN_KEY);
         setAuthToken(null);
       })
 
       .addCase(fetchCurrentUser.fulfilled, (s, a) => {
-        s.user = a.payload; s.isLoggedIn = true;
+        s.user = a.payload;
+        s.isLoggedIn = true;
       })
       .addCase(fetchCurrentUser.rejected, (s) => {
-        s.token = null; s.isLoggedIn = false;
+        s.token = null;
+        s.isLoggedIn = false;
         localStorage.removeItem(TOKEN_KEY);
         setAuthToken(null);
       })
 
-      .addCase(updateUser.fulfilled, (s, a) => { s.user = a.payload; });
+      .addCase(updateUser.fulfilled, (s, a) => {
+        s.user = a.payload;
+      });
   },
 });
 
