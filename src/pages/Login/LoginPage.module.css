@@ -1,0 +1,264 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+.card {
+  width: 950px;
+  min-height: 580px;
+  display: flex;
+  border-radius: 32px;
+  overflow: hidden;
+  background: white;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* LEFT */
+.left {
+  width: 45%;
+  background: #f6b830;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left::before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 60% 40% 50% 70%;
+  top: 40px;
+  left: 35px;
+}
+
+.dog {
+  width: 88%;
+  object-fit: contain;
+  z-index: 2;
+}
+
+/* PET CARD */
+.petCard {
+  position: absolute;
+  bottom: 25px;
+  left: 20px;
+  right: 20px;
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  z-index: 3;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 50%;
+  background: #fff3d6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar img {
+  width: 70%;
+}
+
+.petInfo {
+  flex: 1;
+}
+
+.petHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.name {
+  color: #f6b830;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.birthday {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.desc {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* RIGHT */
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+}
+
+.formBox {
+  width: 320px;
+}
+
+.formBox h1 {
+  font-size: 46px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #202020;
+}
+
+.formBox p {
+  font-size: 14px;
+  color: #7b7b7b;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputWrapper,
+.passwordWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #ececec;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input::placeholder {
+  color: #b8b8b8;
+}
+
+.input:focus {
+  border-color: #f6b830;
+  box-shadow: 0 0 0 4px rgba(246, 184, 48, 0.15);
+}
+
+.error {
+  border-color: #ff4d4f;
+}
+
+.errorIcon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff4d4f;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.errorText {
+  font-size: 11px;
+  color: #ff4d4f;
+  margin-top: 6px;
+  padding-left: 14px;
+}
+
+/* PASSWORD */
+.eyeBtn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.eyeBtn img {
+  width: 18px;
+  opacity: 0.5;
+}
+
+/* BUTTON */
+.loginBtn {
+  margin-top: 10px;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: #f6b830;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.loginBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(246, 184, 48, 0.35);
+}
+
+.loginBtn:active {
+  transform: scale(0.98);
+}
+
+/* REGISTER */
+.register {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: #999;
+}
+
+.register a {
+  color: #f6b830;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .left {
+    display: none;
+  }
+
+  .right {
+    padding: 40px 25px;
+  }
+
+  .formBox {
+    width: 100%;
+  }
+}
