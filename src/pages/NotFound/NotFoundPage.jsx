@@ -8,12 +8,12 @@ export default function NotFoundPage() {
         <div className={styles.code}>
           <span>4</span>
           <div className={styles.zeroWrap}>
-            <span className={styles.catEmoji}>🐱</span>
+            <img src="/404cat.png" alt="cat" className={styles.catImg} />
           </div>
           <span>4</span>
         </div>
         <p className={styles.text}>Ooops! This page not found :(</p>
-        <Link to="/home" className={styles.btn}>Go to home page</Link>
+        <Link to="/home" className={styles.btn}>To home page</Link>
       </div>
     </main>
   );
