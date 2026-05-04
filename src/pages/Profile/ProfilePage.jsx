@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { clientLogout, logout } from '../../redux/slices/authSlice';
 import ModalEditUser from '../../components/Modals/ModalEditUser';
 import ModalApproveAction from '../../components/Modals/ModalApproveAction';
+import ModalNotice from '../../components/Modals/ModalNotice';
 import api from '../../api/api';
 import styles from './ProfilePage.module.css';
 
@@ -19,6 +20,9 @@ export default function ProfilePage() {
 
   const [fullUser, setFullUser] = useState(null);
   const [activeTab, setActiveTab] = useState('favorites');
+
+  // ModalNotice için
+  const [selectedNotice, setSelectedNotice] = useState(null);
 
   useEffect(() => {
     const fetchFullUser = async () => {
@@ -68,6 +72,34 @@ export default function ProfilePage() {
 
   const handleUserUpdated = (updatedUser) => {
     setFullUser((prev) => ({ ...prev, ...updatedUser }));
+  };
+
+  // ★★★ EKLENEN FONKSİYON ★★★
+  const handleLearnMore = async (notice) => {
+    try {
+      const { data } = await api.get(`/notices/${notice._id}`);
+      const favoriteIds = fullUser?.noticesFavorites?.map((item) => item._id) || [];
+      setSelectedNotice({
+        ...data,
+        isFavorite: favoriteIds.includes(data._id),
+      });
+    } catch {
+      toast.error('İlan detayı alınamadı');
+    }
+  };
+
+  // Favori durumu değiştiğinde listeyi güncelle (ModalNotice'dan dönebilir)
+  const handleFavoriteToggle = (id, newState) => {
+    setFullUser((prev) => {
+      if (!prev) return prev;
+      const updatedFavs = prev.noticesFavorites?.map((n) =>
+        n._id === id ? { ...n, isFavorite: newState } : n
+      ) || [];
+      return { ...prev, noticesFavorites: updatedFavs };
+    });
+    if (selectedNotice?._id === id) {
+      setSelectedNotice((prev) => (prev ? { ...prev, isFavorite: newState } : prev));
+    }
   };
 
   const pets = fullUser?.pets || [];
@@ -154,16 +186,13 @@ export default function ProfilePage() {
                 <ul className={styles.petsList}>
                   {pets.map((p) => (
                     <li key={p._id} className={styles.petItem}>
-                      {/* Resim */}
                       {p.imgURL ? (
                         <img src={p.imgURL} alt={p.name} className={styles.petImg} />
                       ) : (
                         <div className={styles.petImgDefault}>🐾</div>
                       )}
 
-                      {/* İçerik */}
                       <div className={styles.petContent}>
-                        {/* Pet'in başlığı/türü – API'nize göre p.title veya p.breed kullanabilirsiniz */}
                         <p className={styles.petTitle}>{p.title || p.breed || p.species}</p>
                         <div className={styles.petDetails}>
                           <div className={styles.petDetailCol}>
@@ -189,7 +218,6 @@ export default function ProfilePage() {
                         </div>
                       </div>
 
-                      {/* Sil butonu */}
                       <button
                         onClick={() => handleDeletePet(p._id)}
                         className={styles.deleteBtn}
@@ -242,16 +270,13 @@ export default function ProfilePage() {
               <ul className={styles.noticesGrid}>
                 {notices.map((n) => (
                   <li key={n._id} className={styles.noticeCard}>
-                    {/* Kart resmi */}
                     {n.imgURL && (
                       <div className={styles.noticeImgWrap}>
                         <img src={n.imgURL} alt={n.title} className={styles.noticeImg} />
                       </div>
                     )}
 
-                    {/* Kart gövdesi */}
                     <div className={styles.noticeCardBody}>
-                      {/* Başlık + yıldız */}
                       <div className={styles.noticeTitleRow}>
                         <h4 className={styles.noticeTitle}>{n.title}</h4>
                         <span className={styles.noticeStar}>
@@ -259,7 +284,6 @@ export default function ProfilePage() {
                         </span>
                       </div>
 
-                      {/* Detay satırı */}
                       <div className={styles.noticeDetails}>
                         {[
                           { label: 'Name', value: n.name },
@@ -275,21 +299,19 @@ export default function ProfilePage() {
                         ))}
                       </div>
 
-                      {/* Açıklama */}
                       {n.comment && (
                         <p className={styles.noticeComment}>{n.comment}</p>
                       )}
 
-                      {/* Fiyat */}
                       {n.price != null && (
                         <p className={styles.noticePrice}>${n.price.toFixed(2)}</p>
                       )}
 
-                      {/* Aksiyon satırı */}
                       <div className={styles.noticeActions}>
+                        {/* ★ DEĞİŞTİ: navigate yerine handleLearnMore */}
                         <button
                           className={styles.learnMoreBtn}
-                          onClick={() => navigate(`/notices/${n._id}`)}
+                          onClick={() => handleLearnMore(n)}
                         >
                           Learn more
                         </button>
@@ -324,6 +346,14 @@ export default function ProfilePage() {
           onClose={() => setShowLogout(false)}
           onConfirm={handleLogout}
           question="Hesabınızdan çıkış yapmak istediğinizden emin misiniz?"
+        />
+      )}
+      {/* ★ EKLENDİ: ModalNotice */}
+      {selectedNotice && (
+        <ModalNotice
+          notice={selectedNotice}
+          onClose={() => setSelectedNotice(null)}
+          onFavoriteToggle={handleFavoriteToggle}
         />
       )}
     </main>
