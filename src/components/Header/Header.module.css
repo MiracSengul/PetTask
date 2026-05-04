@@ -1,8 +1,11 @@
+/* ── Header ── */
 .header {
   position: fixed; top: 0; left: 0; right: 0;
   height: var(--header-height);
-  background: var(--color-brand);
+  background: var(--color-white);
   z-index: 100;
+  border-bottom: 1.5px solid var(--color-border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
 .inner {
@@ -13,98 +16,117 @@
 }
 
 .logo {
-  display: flex; align-items: center; gap: 4px;
-  font-size: 20px; font-weight: 800;
-  color: var(--color-white);
+  display: flex; align-items: center;
+  font-size: 22px; font-weight: 800;
+  color: var(--color-black);
   flex-shrink: 0;
   letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+/* Inline style="color:#fff" i geçersiz kıl → turuncu kalp */
+.logo span {
+  color: var(--color-brand) !important;
 }
 
 .nav {
   display: none;
   gap: 4px;
   flex: 1;
+  justify-content: center;
 }
-
 @media (min-width: 768px) { .nav { display: flex; } }
 
 .navLink {
-  padding: 7px 14px;
+  padding: 7px 18px;
   border-radius: 40px;
   font-size: 14px; font-weight: 600;
-  color: rgba(255,255,255,0.85);
+  color: var(--color-text-secondary);
   transition: 0.2s;
+  text-decoration: none;
 }
-.navLink:hover, .navLink.active { color: #fff; background: rgba(255,255,255,0.2); }
+.navLink:hover { color: var(--color-text); background: var(--color-bg); }
+.navLink.active { color: var(--color-text); background: var(--color-bg); font-weight: 700; }
 
 .authArea {
   display: none; align-items: center; gap: 10px; margin-left: auto;
 }
 @media (min-width: 768px) { .authArea { display: flex; } }
 
+/* LOGIN → turuncu dolu buton */
 .authBtnLogin {
-  padding: 9px 20px; border-radius: 40px;
+  padding: 10px 24px; border-radius: 40px;
   font-size: 13px; font-weight: 700;
-  background: var(--color-white); color: var(--color-black);
-  border: none; cursor: pointer; transition: 0.2s;
+  background: var(--color-brand);
+  color: var(--color-black);
+  border: 2px solid var(--color-brand);
+  cursor: pointer; transition: 0.2s;
   text-decoration: none; display: inline-flex; align-items: center;
 }
-.authBtnLogin:hover { opacity: 0.9; }
+.authBtnLogin:hover { background: var(--color-brand-dark); border-color: var(--color-brand-dark); }
 
+/* REGISTRATION → çerçeveli buton */
 .authBtnRegister {
-  padding: 9px 20px; border-radius: 40px;
+  padding: 10px 24px; border-radius: 40px;
   font-size: 13px; font-weight: 700;
   background: transparent;
-  border: 2px solid var(--color-white);
-  color: var(--color-white); cursor: pointer; transition: 0.2s;
+  border: 2px solid var(--color-brand);
+  color: var(--color-black);
+  cursor: pointer; transition: 0.2s;
   text-decoration: none; display: inline-flex; align-items: center;
 }
-.authBtnRegister:hover { background: rgba(255,255,255,0.15); }
+.authBtnRegister:hover { background: var(--color-brand); }
 
+/* LOGOUT */
 .authBtnLogout {
-  padding: 9px 20px; border-radius: 40px;
+  padding: 10px 24px; border-radius: 40px;
   font-size: 13px; font-weight: 700;
-  background: var(--color-white); color: var(--color-black);
-  border: none; cursor: pointer; transition: 0.2s;
+  background: var(--color-brand);
+  color: var(--color-black);
+  border: 2px solid var(--color-brand);
+  cursor: pointer; transition: 0.2s;
 }
-.authBtnLogout:hover { opacity: 0.9; }
+.authBtnLogout:hover { background: var(--color-brand-dark); border-color: var(--color-brand-dark); }
 
 .userBar {
   display: flex; align-items: center; gap: 8px;
-  font-size: 14px; font-weight: 700; color: var(--color-white);
+  font-size: 14px; font-weight: 700; color: var(--color-text);
   text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.2s;
 }
-.userBar:hover { background: rgba(255,255,255,0.15); }
+.userBar:hover { background: var(--color-bg); }
 
-.avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-brand); }
 .avatarDefault {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(255,255,255,0.3);
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--color-brand);
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; border: 2px solid #fff;
+  font-size: 16px;
 }
 
+/* Burger (mobil) */
 .burger {
   display: flex; flex-direction: column; gap: 5px;
   padding: 8px; margin-left: auto; background: none; border: none; cursor: pointer;
 }
 @media (min-width: 768px) { .burger { display: none; } }
-.burger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+.burger span { display: block; width: 22px; height: 2px; background: var(--color-text); border-radius: 2px; }
 
+/* Mobile menü */
 .mobileMenu {
-  position: fixed; inset: 0; background: var(--color-brand);
+  position: fixed; inset: 0; background: var(--color-white);
   z-index: 200; display: flex; flex-direction: column;
   padding: 80px 24px 40px; gap: 8px;
 }
 .mobileClose {
   position: absolute; top: 20px; right: 20px;
-  font-size: 22px; color: #fff; padding: 8px;
+  font-size: 22px; color: var(--color-text); padding: 8px;
   background: none; border: none; cursor: pointer;
 }
 .mobileNav { display: flex; flex-direction: column; gap: 4px; }
 .mobileNavLink {
   padding: 14px 20px; border-radius: 12px;
-  font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.85); transition: 0.2s;
+  font-size: 16px; font-weight: 600; color: var(--color-text-secondary); transition: 0.2s;
+  text-decoration: none; display: block;
 }
-.mobileNavLink:hover, .mobileNavLink.active { background: rgba(255,255,255,0.2); color: #fff; }
+.mobileNavLink:hover, .mobileNavLink.active { background: var(--color-bg); color: var(--color-text); }
 .mobileAuth { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }

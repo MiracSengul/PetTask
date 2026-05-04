@@ -1,47 +1,51 @@
-/* Sayfa arka planı */
+/* ─── Home Page ─── */
 .page {
   background: #fdf7f2;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding-top: 16px;
+  padding-top: calc(var(--header-height) + 16px);
+  padding-bottom: 40px;
 }
 
-/* Balon + resim sarmalayıcı */
+/* Sarı balon + resim wrapper */
 .balloonContainer {
   max-width: 1216px;
-  width: 100%;
-  margin: 0 32px;
+  width: calc(100% - 40px);
+  margin: 0 auto;
   border-radius: 60px;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
 
-/* Üst sarı balon */
+/* Sarı balon alanı */
 .balloon {
-  background: #f6b83d;
-  height: 384px;
+  background: var(--color-brand);
+  min-height: 360px;
   display: flex;
   align-items: flex-end;
-  justify-content: flex-end;
-  padding: 40px 60px;
+  padding: 48px 60px;
 }
 
-/* Yazı bloğu (sağ alt) */
+/* İçerik: başlık sol, açıklama sağ */
 .heroContent {
-  text-align: right;
-  max-width: 500px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 48px;
+  width: 100%;
 }
 
-/* Başlık */
+/* Büyük başlık → sol */
 .heroTitle {
   font-family: 'Manrope', sans-serif;
-  font-weight: 700;
-  font-size: 90px;
-  line-height: 87px;
+  font-weight: 800;
+  font-size: 80px;
+  line-height: 0.95;
   letter-spacing: -0.03em;
   color: #ffffff;
-  margin-bottom: 20px;
+  flex: 1 1 auto;
+  text-align: left;
 }
 
 /* "care" soluk beyaz */
@@ -49,83 +53,77 @@
   opacity: 0.5;
 }
 
-/* Açıklama metni */
+/* Açıklama → sağ */
 .heroDesc {
   font-family: 'Manrope', sans-serif;
   font-weight: 400;
-  font-size: 18px;
-  line-height: 1.5;
-  color: #ffffff;
-  opacity: 0.85;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.9);
+  flex: 0 0 260px;
+  text-align: left;
+  padding-bottom: 6px;
 }
 
 /* Alt resim alanı */
 .imageSection {
-  height: 384px;
+  height: 400px;
   overflow: hidden;
+  background: #e8d5b5;
 }
 
 .heroImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 30%;
   display: block;
 }
 
-/* ===== Responsive ===== */
-
-/* Tablet */
+/* ── Tablet ── */
 @media (max-width: 1279px) {
   .balloonContainer {
-    margin: 0 20px;
+    width: calc(100% - 32px);
     border-radius: 40px;
   }
-
   .balloon {
-    height: 320px;
-    padding: 30px 40px;
+    min-height: 300px;
+    padding: 36px 44px;
   }
-
   .heroTitle {
-    font-size: 64px;
-    line-height: 1.1;
+    font-size: 60px;
+    line-height: 1.0;
   }
-
-  .imageSection {
-    height: 320px;
+  .heroDesc {
+    flex: 0 0 220px;
+    font-size: 14px;
   }
+  .imageSection { height: 320px; }
 }
 
-/* Mobil */
+/* ── Mobil ── */
 @media (max-width: 767px) {
   .balloonContainer {
-    margin: 0 10px;
+    width: calc(100% - 20px);
     border-radius: 30px;
   }
-
   .balloon {
-    height: auto;
-    padding: 40px 20px;
-    justify-content: center;
+    min-height: auto;
+    padding: 40px 24px;
     align-items: center;
-    text-align: center;
   }
-
   .heroContent {
-    text-align: center;
-    max-width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
-
   .heroTitle {
-    font-size: 42px;
-    line-height: 1.15;
+    font-size: 40px;
+    line-height: 1.1;
   }
-
   .heroDesc {
-    font-size: 16px;
+    flex: unset;
+    font-size: 14px;
   }
-
-  .imageSection {
-    height: 220px;
-  }
+  .imageSection { height: 220px; }
 }

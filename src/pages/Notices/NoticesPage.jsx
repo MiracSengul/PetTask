@@ -176,8 +176,11 @@ export default function NoticesPage() {
               <li key={n._id} className={styles.card}>
                 <div className={styles.imgWrap}>
                   {n.imgURL ? <img src={n.imgURL} alt={n.title} className={styles.img} /> : <div className={styles.imgPlaceholder}>🐾</div>}
-                  <button className={`${styles.favBtn} ${n.isFavorite ? styles.favActive : ''}`} onClick={(e) => handleFav(n, e)}>
-                    {n.isFavorite ? '❤️' : '🤍'}
+                  <button
+                    className={`${styles.favBtn} ${n.isFavorite ? styles.favActive : ''}`}
+                    onClick={(e) => handleFav(n, e)}
+                  >
+                    <img src="/heart.svg" alt="favorite" className={styles.heartIcon} />
                   </button>
                   {n.category && <span className={styles.categoryBadge}>{n.category}</span>}
                 </div>

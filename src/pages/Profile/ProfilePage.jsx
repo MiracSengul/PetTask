@@ -13,15 +13,13 @@ export default function ProfilePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [showEdit, setShowEdit]   = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const [loading, setLoading]     = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Kullanıcı tam verisi (evcil hayvanlar, favoriler, görüntülenenler)
-  const [fullUser, setFullUser]   = useState(null);
-  const [activeTab, setActiveTab] = useState('favorites'); // 'favorites' | 'viewed'
+  const [fullUser, setFullUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('favorites');
 
-  // ── Kullanıcı tam verisini çek (pets + noticesFavorites + noticesViewed) ──
   useEffect(() => {
     const fetchFullUser = async () => {
       setLoading(true);
@@ -36,14 +34,12 @@ export default function ProfilePage() {
     fetchFullUser();
   }, []);
 
-  // ── Çıkış ──────────────────────────────────────────────────────────
   const handleLogout = async () => {
     await dispatch(logout());
     dispatch(clientLogout());
     navigate('/');
   };
 
-  // ── Evcil hayvan silme ─────────────────────────────────────────────
   const handleDeletePet = async (id) => {
     try {
       await api.delete(`/users/current/pets/remove/${id}`);
@@ -57,7 +53,6 @@ export default function ProfilePage() {
     }
   };
 
-  // ── Favori kaldırma ───────────────────────────────────────────────
   const handleRemoveFavorite = async (id) => {
     try {
       await api.delete(`/notices/favorites/remove/${id}`);
@@ -71,73 +66,130 @@ export default function ProfilePage() {
     }
   };
 
-  // ── Kullanıcı düzenlendikten sonra güncelle (ModalEditUser'tan çağrılır) ──
   const handleUserUpdated = (updatedUser) => {
     setFullUser((prev) => ({ ...prev, ...updatedUser }));
   };
 
-  // ── Render yardımcıları ───────────────────────────────────────────
-  const pets      = fullUser?.pets || [];
+  const pets = fullUser?.pets || [];
   const favorites = fullUser?.noticesFavorites || [];
-  const viewed    = fullUser?.noticesViewed || [];
-  const notices   = activeTab === 'favorites' ? favorites : viewed;
+  const viewed = fullUser?.noticesViewed || [];
+  const notices = activeTab === 'favorites' ? favorites : viewed;
 
   return (
     <main className="page">
       <div className="container">
         <div className={styles.layout}>
+
           {/* ─── Sol Panel: UserCard ─── */}
           <aside className={styles.userCard}>
+            {/* Üst satır: User rozeti + edit ikonu */}
+            <div className={styles.cardTopRow}>
+              <span className={styles.userBadge}>
+                <span className={styles.userBadgeIcon}>👤</span> User
+              </span>
+              <button
+                className={styles.editIconBtn}
+                onClick={() => setShowEdit(true)}
+                title="Düzenle"
+              >
+                ✏️
+              </button>
+            </div>
+
+            {/* Avatar */}
             <div className={styles.avatarWrap}>
               {fullUser?.avatar ? (
                 <img src={fullUser.avatar} alt="avatar" className={styles.avatar} />
               ) : (
-                <div className={styles.avatarDefault}>👤</div>
+                <div className={styles.avatarDefault}>
+                  <span className={styles.avatarIcon}>👤</span>
+                </div>
               )}
-            </div>
-            <button
-              className="btn btn-ghost"
-              onClick={() => setShowEdit(true)}
-              style={{ width: '100%' }}
-            >
-              ✏️ Edit
-            </button>
-
-            <div className={styles.userInfo}>
-              <p className={styles.userName}>{fullUser?.name || user?.name}</p>
-              {fullUser?.email && <p className={styles.userDetail}>✉️ {fullUser.email}</p>}
-              {fullUser?.phone && <p className={styles.userDetail}>📞 {fullUser.phone}</p>}
+              <p className={styles.uploadLabel}>Upload photo</p>
             </div>
 
-            {/* Pets */}
+            {/* My Information – input alanları */}
+            <div className={styles.infoSection}>
+              <p className={styles.infoSectionTitle}>My information</p>
+              <div className={styles.inputGroup}>
+                <input
+                  className={styles.infoInput}
+                  type="text"
+                  value={fullUser?.name || user?.name || ''}
+                  readOnly
+                  placeholder="Name"
+                />
+                <input
+                  className={styles.infoInput}
+                  type="email"
+                  value={fullUser?.email || ''}
+                  readOnly
+                  placeholder="Email"
+                />
+                <input
+                  className={styles.infoInput}
+                  type="tel"
+                  value={fullUser?.phone || ''}
+                  readOnly
+                  placeholder="Phone"
+                />
+              </div>
+            </div>
+
+            {/* My Pets */}
             <div className={styles.petsBlock}>
               <div className={styles.petsHeader}>
-                <h3>My Pets</h3>
+                <h3 className={styles.petsTitle}>My pets</h3>
                 <button
-                  className="btn btn-primary"
+                  className={styles.addPetBtn}
                   onClick={() => navigate('/add-pet')}
-                  style={{ fontSize: 12, padding: '6px 14px' }}
                 >
-                  + Add pet
+                  Add pet +
                 </button>
               </div>
+
               {pets.length === 0 ? (
-                <p style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>
-                  Henüz evcil hayvan eklenmedi.
-                </p>
+                <p className={styles.emptyText}>Henüz evcil hayvan eklenmedi.</p>
               ) : (
                 <ul className={styles.petsList}>
                   {pets.map((p) => (
                     <li key={p._id} className={styles.petItem}>
+                      {/* Resim */}
                       {p.imgURL ? (
                         <img src={p.imgURL} alt={p.name} className={styles.petImg} />
                       ) : (
                         <div className={styles.petImgDefault}>🐾</div>
                       )}
-                      <div className={styles.petInfo}>
-                        <strong>{p.name}</strong>
-                        <span>{p.species}</span>
+
+                      {/* İçerik */}
+                      <div className={styles.petContent}>
+                        {/* Pet'in başlığı/türü – API'nize göre p.title veya p.breed kullanabilirsiniz */}
+                        <p className={styles.petTitle}>{p.title || p.breed || p.species}</p>
+                        <div className={styles.petDetails}>
+                          <div className={styles.petDetailCol}>
+                            <span className={styles.petDetailLabel}>Name</span>
+                            <span className={styles.petDetailValue}>{p.name}</span>
+                          </div>
+                          <div className={styles.petDetailCol}>
+                            <span className={styles.petDetailLabel}>Birthday</span>
+                            <span className={styles.petDetailValue}>
+                              {p.birthday
+                                ? new Date(p.birthday).toLocaleDateString('tr-TR')
+                                : '—'}
+                            </span>
+                          </div>
+                          <div className={styles.petDetailCol}>
+                            <span className={styles.petDetailLabel}>Sex</span>
+                            <span className={styles.petDetailValue}>{p.sex || '—'}</span>
+                          </div>
+                          <div className={styles.petDetailCol}>
+                            <span className={styles.petDetailLabel}>Species</span>
+                            <span className={styles.petDetailValue}>{p.species || '—'}</span>
+                          </div>
+                        </div>
                       </div>
+
+                      {/* Sil butonu */}
                       <button
                         onClick={() => handleDeletePet(p._id)}
                         className={styles.deleteBtn}
@@ -151,24 +203,24 @@ export default function ProfilePage() {
               )}
             </div>
 
+            {/* Log Out */}
             <button
-              className="btn btn-ghost"
+              className={styles.logoutBtn}
               onClick={() => setShowLogout(true)}
-              style={{ width: '100%', color: 'var(--color-error)' }}
             >
-              Log Out
+              LOG OUT
             </button>
           </aside>
 
           {/* ─── Sağ Panel: MyNotices ─── */}
           <section className={styles.notices}>
-            <h2 className={styles.noticesTitle}>My Notices</h2>
+            {/* Tabs */}
             <div className={styles.tabs}>
               <button
                 className={`${styles.tab} ${activeTab === 'favorites' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('favorites')}
               >
-                My favorites pets
+                My favorite pets
               </button>
               <button
                 className={`${styles.tab} ${activeTab === 'viewed' ? styles.activeTab : ''}`}
@@ -178,35 +230,80 @@ export default function ProfilePage() {
               </button>
             </div>
 
+            {/* İçerik */}
             {loading ? (
-              <div style={{ textAlign: 'center', padding: 40, fontSize: 32 }}>🔄</div>
+              <div className={styles.emptyState}>🔄</div>
             ) : notices.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: 'var(--color-text-secondary)' }}>
+              <div className={styles.emptyState}>
                 <div style={{ fontSize: 36 }}>🐾</div>
                 <p>İlan bulunamadı.</p>
               </div>
             ) : (
-              <ul className={styles.noticesList}>
+              <ul className={styles.noticesGrid}>
                 {notices.map((n) => (
-                  <li key={n._id} className={styles.noticeItem}>
+                  <li key={n._id} className={styles.noticeCard}>
+                    {/* Kart resmi */}
                     {n.imgURL && (
-                      <img src={n.imgURL} alt={n.title} className={styles.noticeImg} />
+                      <div className={styles.noticeImgWrap}>
+                        <img src={n.imgURL} alt={n.title} className={styles.noticeImg} />
+                      </div>
                     )}
-                    <div className={styles.noticeBody}>
-                      <h4>{n.title}</h4>
-                      <p>
-                        {n.name} • {n.species}
-                      </p>
+
+                    {/* Kart gövdesi */}
+                    <div className={styles.noticeCardBody}>
+                      {/* Başlık + yıldız */}
+                      <div className={styles.noticeTitleRow}>
+                        <h4 className={styles.noticeTitle}>{n.title}</h4>
+                        <span className={styles.noticeStar}>
+                          ⭐ {n.popularity ?? n.rating ?? ''}
+                        </span>
+                      </div>
+
+                      {/* Detay satırı */}
+                      <div className={styles.noticeDetails}>
+                        {[
+                          { label: 'Name', value: n.name },
+                          { label: 'Birthday', value: n.birthday ? new Date(n.birthday).toLocaleDateString('tr-TR') : '—' },
+                          { label: 'Sex', value: n.sex || '—' },
+                          { label: 'Species', value: n.species || '—' },
+                          { label: 'Category', value: n.category || '—' },
+                        ].map(({ label, value }) => (
+                          <div key={label} className={styles.noticeDetailCol}>
+                            <span className={styles.noticeDetailLabel}>{label}</span>
+                            <span className={styles.noticeDetailValue}>{value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Açıklama */}
+                      {n.comment && (
+                        <p className={styles.noticeComment}>{n.comment}</p>
+                      )}
+
+                      {/* Fiyat */}
+                      {n.price != null && (
+                        <p className={styles.noticePrice}>${n.price.toFixed(2)}</p>
+                      )}
+
+                      {/* Aksiyon satırı */}
+                      <div className={styles.noticeActions}>
+                        <button
+                          className={styles.learnMoreBtn}
+                          onClick={() => navigate(`/notices/${n._id}`)}
+                        >
+                          Learn more
+                        </button>
+                        {activeTab === 'favorites' && (
+                          <button
+                            onClick={() => handleRemoveFavorite(n._id)}
+                            className={styles.deleteBtn}
+                            title="Favorilerden çıkar"
+                          >
+                            🗑️
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    {activeTab === 'favorites' && (
-                      <button
-                        onClick={() => handleRemoveFavorite(n._id)}
-                        className={styles.deleteBtn}
-                        title="Favorilerden çıkar"
-                      >
-                        🗑️
-                      </button>
-                    )}
                   </li>
                 ))}
               </ul>
